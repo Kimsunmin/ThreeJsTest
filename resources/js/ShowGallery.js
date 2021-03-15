@@ -38,13 +38,35 @@ frontLight.position.set(0, ypos, 5);
 const backLight = new THREE.DirectionalLight(color, intensity);
 backLight.position.set(0, ypos, -5);
 
+function dumpObject(obj, lines = [], isLast = true, prefix = '') {
+	const localPrefix = isLast ? '└─' : '├─';
+	lines.push(`${prefix}${prefix ? localPrefix : ''}${obj.name || '*no-name*'} [${obj.type}]`);
+	const newPrefix = prefix + (isLast ? '  ' : '│ ');
+	const lastNdx = obj.children.length - 1;
+	obj.children.forEach((child, ndx) => {
+	  const isLast = ndx === lastNdx;
+	  dumpObject(child, lines, isLast, newPrefix);
+	});
+	return lines;
+}
 
+let test;
 const gltfLoader = new GLTFLoader();
 const url = './resources/landscape_gallery_by_stoneysteiner/scene.gltf';
 gltfLoader.load(url, (gltf) => {
     const root = gltf.scene;
     scene.add(root);
-	
+
+	// 오브젝트 객체의 정보를 출력해준다
+	console.log(dumpObject(root).join('\n'));
+	console.dir(root.getObjectByName('Cube003'));
+
+	// Cube003의 children은 액자인지 그림만인지... 하튼 객체 찾아냄
+	test = root.getObjectByName('Cube003');
+
+	// for(let test2 of test.children){
+	// 	test2.rotation.y += 0.3;
+	// }
 
 	// 일단 상하좌우 조명설치
 	// 추후 지붕에서 보이거나 액자마다 할 예정
@@ -55,9 +77,7 @@ gltfLoader.load(url, (gltf) => {
 
 
 	root.add(camera);
-	console.dir(root.children);
 });
-
 
 //화면 랜더링
 function animate() {
