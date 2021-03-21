@@ -18,13 +18,15 @@ middle.appendChild( renderer.domElement );
 const controls = new THREE.OrbitControls( camera, renderer.domElement );
 controls.update();
 
+document.querySelector('canvas').addEventListener('onclick',()=>{console.log('click')});
 
 //빛 추가
-
 const color = 'white';
 const intensity = 1;
 const ypos = 7;
 
+//액자 객체들을 저장하는 배열
+let targetList = [];
 
 const leftLight = new THREE.DirectionalLight(color, intensity);
 leftLight.position.set(5, ypos, 0);
@@ -50,7 +52,7 @@ function dumpObject(obj, lines = [], isLast = true, prefix = '') {
 	return lines;
 }
 
-let test;
+let target;
 const gltfLoader = new GLTFLoader();
 const url = './resources/landscape_gallery_by_stoneysteiner/scene.gltf';
 gltfLoader.load(url, (gltf) => {
@@ -62,26 +64,29 @@ gltfLoader.load(url, (gltf) => {
 	console.dir(root.getObjectByName('Cube003'));
 
 	// Cube003의 children은 액자인지 그림만인지... 하튼 객체 찾아냄
-	test = root.getObjectByName('Cube003');
-
-	// for(let test2 of test.children){
-	// 	test2.rotation.y += 0.3;
-	// }
-
+	target = root.getObjectByName('Cube003');
+	for(let item of target.children){
+		targetList.push(item);
+	}
 	// 일단 상하좌우 조명설치
 	// 추후 지붕에서 보이거나 액자마다 할 예정
 	root.add(rightLight);
 	root.add(leftLight);
 	root.add(frontLight);
 	root.add(backLight);
-
-
 	root.add(camera);
 });
+
+let onDocumentMouseDown = (event) => {
+	console.dir('click.');
+}
 
 //화면 랜더링
 function animate() {
 	requestAnimationFrame( animate );
+	// for(let test2 of test.children){
+	// 	test2.rotation.y += 0.1;
+	// }
 	renderer.render( scene, camera );	
 }
 animate();
