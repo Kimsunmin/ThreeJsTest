@@ -68,6 +68,10 @@ gltfLoader.load(url, (gltf) => {
 	for(let item of target.children){
 		targetList.push(item);
 	}
+	for(let test2 of target.children){
+	   // test2.rotation.x += 0.1;
+	   // test2.rotation.z += 0.1;
+   }
 	// 일단 상하좌우 조명설치
 	// 추후 지붕에서 보이거나 액자마다 할 예정
 	root.add(rightLight);
@@ -84,9 +88,6 @@ let onDocumentMouseDown = (event) => {
 //화면 랜더링
 function animate() {
 	requestAnimationFrame( animate );
-	// for(let test2 of test.children){
-	// 	test2.rotation.y += 0.1;
-	// }
 	renderer.render( scene, camera );	
 }
 animate();
