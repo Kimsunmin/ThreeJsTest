@@ -20,10 +20,6 @@ let init = () => {
 
     camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
     camera.position.z = 2;
-    // 임시로 카메라 위치 설정
-    //scene.add(camera);
-    //camera.position.set(0,150,400);
-	//camera.lookAt(scene.position);
 
     // middle에 랜더한다
     renderer = new THREE.WebGLRenderer();
@@ -31,16 +27,18 @@ let init = () => {
     container.appendChild(renderer.domElement);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // 위,아래로 시점 변경불가능 설정
     controls.maxPolarAngle = controls.getPolarAngle();
     controls.minPolarAngle = controls.getPolarAngle();
+
+    //줌속도 , 회전 속도 설정
     controls.panSpeed = 0.5;
     controls.rotateSpeed = 0.2;
-    console.log(controls.getPolarAngle());
     controls.update();
 
     const color = 'white';
-    const intensity = 1;
-    const ypos = 7;
+    const intensity = 0.9;
+    const ypos = 0.1;
 
     const leftLight = new THREE.DirectionalLight(color, intensity);
     leftLight.position.set(5, ypos, 0);
@@ -54,11 +52,6 @@ let init = () => {
     const backLight = new THREE.DirectionalLight(color, intensity);
     backLight.position.set(0, ypos, -5);
 
-    let light = new THREE.DirectionalLight('white', 1);
-    light.position.set(5,7,0);
-    // 라이트 설정
-
-    //projector = new THREE.Projector();
     let target;
     const gltfLoader = new GLTFLoader();
     const url = './resources/landscape_gallery_by_stoneysteiner/scene.gltf';
@@ -74,8 +67,7 @@ let init = () => {
         for(let item of target.children){
             targetList.push(item);
         }
-        // 일단 상하좌우 조명설치
-        // 추후 지붕에서 보이거나 액자마다 할 예정
+        // 상하좌우 조명설치
         root.add(rightLight);
 	    root.add(leftLight);
 	    root.add(frontLight);
@@ -99,21 +91,19 @@ let onDocumentMouseDown = (event) => {
     console.dir(intersects);
     if(intersects.length > 0){
         console.log('Hit @' + toString(intersects[0].point) + '\n'+ intersects[0].object.name);
-        //camera.position.x = intersects[0].point.x;
-        //camera.position.z = intersects[0].point.z;
-        
         
         targetList.forEach((e) => {
+            // 클릭했을때 눌린 객체가 그림인지 아닌지 확인하는 조건문
             if(e.name === intersects[0].object.name){
-                let aa = e;
                 e.geometry.center();
-                console.dir(aa);
+                console.dir(aa.getWorldPosition());
 
             }
         })
     }
 }
 
+// 백터 값사용시 x,y,z를 정리해서 출력해줌
 let toString = (v) => {
      return "[ " + v.x + ", " + v.y + ", " + v.z + " ]";
 }
