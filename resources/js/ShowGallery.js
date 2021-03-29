@@ -89,5 +89,11 @@ let onDocumentMouseDown = (event) => {
 function animate() {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );	
+	for(let test2 of target.children){
+         //test2.rotation.x += 0.1;
+         //test2.rotation.z += 0.1;
+		 //test2.rotation.y += 0.1;
+        // 이게 그림 하나하나 마다 축을 바꾸는거거든??
+    }
 }
 animate();

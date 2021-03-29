@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/resources/js/load-image.all.min.js"></script>
+</head>
+<body>
+    <input type="file" id="upload">
+    <img src="" alt="" id="preview" style="width: 300px; height: 300px;">
+    <script>
+        document.querySelector('#upload').addEventListener('change',(e)=>{
+            let files = e.target.files;
+            let fileType = files[0].type;
+            let limg = loadImage(files[0],(img,data)=>{
+                img.toBlob((blob)=>{
+                    let rotateFile = new File([blob],files[0].name, {type:fileType});
+                    let reader = new FileReader();
+                    reader.onload = (e)=>{
+                        document.querySelector('#preview').src = e.target.result;
+                        console.dir(e);
+                    }
+                    reader.readAsDataURL(rotateFile);
+                },fileType)
+            },{orientation : 3});
+            console.dir(files);
+            console.dir(limg);
+            console.dir(e.target.result);
+        });
+    </script>
+</body>
+</html>
